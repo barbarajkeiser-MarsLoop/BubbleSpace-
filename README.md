@@ -340,3 +340,388 @@ plt.ylabel("Amplitude")
 plt.show()
 
 ---
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Pause, RotateCcw, Zap, Shield, Waves } from 'lucide-react';
+
+const BlackHoleBubbleSpace = () => {
+  const canvasRef = useRef(null);
+  const [running, setRunning] = useState(false);
+  const [bubbles, setBubbles] = useState([]);
+  const [eventLog, setEventLog] = useState([]);
+  const animationRef = useRef(null);
+  const frameRef = useRef(0);
+
+  // Bubble types mirroring black hole physics
+  const BUBBLE_TYPES = {
+    EVENT_HORIZON: {
+      name: "Event Horizon",
+      color: "#000000",
+      border: "#FFD700",
+      permeability: 0.0,
+      sovereignty: 1.0,
+      description: "Absolute boundary - no penetration"
+    },
+    ACCRETION_DISK: {
+      name: "Accretion Disk",
+      color: "#FF6B35",
+      border: "#FFA500",
+      permeability: 0.8,
+      sovereignty: 0.4,
+      description: "High-energy collision zone"
+    },
+    FRAME_DRAG: {
+      name: "Frame Dragger",
+      color: "#4ECDC4",
+      border: "#45B7D1",
+      permeability: 0.5,
+      sovereignty: 0.7,
+      description: "Warps nearby geometry without contact"
+    },
+    ENTANGLED: {
+      name: "Entangled Pair",
+      color: "#9B59B6",
+      border: "#E74C3C",
+      permeability: 0.3,
+      sovereignty: 0.9,
+      description: "Connected across separation"
+    }
+  };
+
+  class Bubble {
+    constructor(x, y, type) {
+      this.x = x;
+      this.y = y;
+      this.type = BUBBLE_TYPES[type];
+      this.typeName = type;
+      this.radius = 40;
+      this.vx = (Math.random() - 0.5) * 1.5;
+      this.vy = (Math.random() - 0.5) * 1.5;
+      this.phase = Math.random() * Math.PI * 2;
+      this.colliding = false;
+      this.entangledWith = null;
+      this.frameDragRadius = this.typeName === 'FRAME_DRAG' ? 120 : 0;
+    }
+
+    update(canvas) {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.phase += 0.05;
+
+      // Boundary reflection
+      if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
+        this.vx *= -1;
+      }
+      if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
+        this.vy *= -1;
+      }
+
+      this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
+      this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, this.y));
+    }
+
+    draw(ctx) {
+      // Frame drag effect
+      if (this.frameDragRadius > 0) {
+        const gradient = ctx.createRadialGradient(this.x, this.y, this.radius, this.x, this.y, this.frameDragRadius);
+        gradient.addColorStop(0, 'rgba(78, 205, 196, 0.1)');
+        gradient.addColorStop(1, 'rgba(78, 205, 196, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.frameDragRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Main bubble
+      const gradient = ctx.createRadialGradient(
+        this.x - this.radius * 0.3,
+        this.y - this.radius * 0.3,
+        this.radius * 0.1,
+        this.x,
+        this.y,
+        this.radius
+      );
+      gradient.addColorStop(0, this.type.color + '88');
+      gradient.addColorStop(1, this.type.color);
+      
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Border
+      ctx.strokeStyle = this.colliding ? '#FF0000' : this.type.border;
+      ctx.lineWidth = this.colliding ? 4 : 2;
+      ctx.stroke();
+
+      // Event horizon special rendering
+      if (this.typeName === 'EVENT_HORIZON') {
+        ctx.strokeStyle = '#FFD700';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius + 5, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Entanglement visualization
+      if (this.entangledWith) {
+        ctx.strokeStyle = '#E74C3C';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.entangledWith.x, this.entangledWith.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Phase indicator
+      const phaseX = this.x + Math.cos(this.phase) * (this.radius * 0.6);
+      const phaseY = this.y + Math.sin(this.phase) * (this.radius * 0.6);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(phaseX, phaseY, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const logEvent = (message) => {
+    setEventLog(prev => [...prev.slice(-4), {
+      time: new Date().toLocaleTimeString(),
+      message
+    }]);
+  };
+
+  const initBubbles = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const newBubbles = [
+      new Bubble(150, 150, 'EVENT_HORIZON'),
+      new Bubble(450, 150, 'ACCRETION_DISK'),
+      new Bubble(150, 350, 'FRAME_DRAG'),
+      new Bubble(450, 350, 'ENTANGLED'),
+      new Bubble(300, 250, 'ENTANGLED')
+    ];
+
+    // Set up entanglement
+    newBubbles[3].entangledWith = newBubbles[4];
+    newBubbles[4].entangledWith = newBubbles[3];
+
+    setBubbles(newBubbles);
+    logEvent("🌌 BubbleSpace initialized with black hole protocols");
+  };
+
+  const checkCollision = (b1, b2) => {
+    const dx = b2.x - b1.x;
+    const dy = b2.y - b1.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    return distance < b1.radius + b2.radius;
+  };
+
+  const handleCollision = (b1, b2) => {
+    const effectivePerm = (b1.type.permeability + b2.type.permeability) / 2;
+    const effectiveSov = (b1.type.sovereignty + b2.type.sovereignty) / 2;
+
+    b1.colliding = true;
+    b2.colliding = true;
+
+    if (b1.typeName === 'EVENT_HORIZON' || b2.typeName === 'EVENT_HORIZON') {
+      // Event horizon collision - total rejection
+      const dx = b2.x - b1.x;
+      const dy = b2.y - b1.y;
+      const angle = Math.atan2(dy, dx);
+      const force = 3;
+      
+      b1.vx -= Math.cos(angle) * force;
+      b1.vy -= Math.sin(angle) * force;
+      b2.vx += Math.cos(angle) * force;
+      b2.vy += Math.sin(angle) * force;
+      
+      logEvent(`⚫ Event Horizon REJECTED collision - sovereignty preserved`);
+    } else if (effectivePerm > 0.5) {
+      // Permeable collision - interference pattern
+      const interference = Math.sin(b1.phase + b2.phase) * effectivePerm;
+      logEvent(`🌊 Collision: ${b1.type.name} + ${b2.type.name} = interference ${interference.toFixed(2)}`);
+      
+      // Gentle bounce
+      const dx = b2.x - b1.x;
+      const dy = b2.y - b1.y;
+      const angle = Math.atan2(dy, dx);
+      b1.vx -= Math.cos(angle) * 0.5;
+      b1.vy -= Math.sin(angle) * 0.5;
+      b2.vx += Math.cos(angle) * 0.5;
+      b2.vy += Math.sin(angle) * 0.5;
+    }
+
+    setTimeout(() => {
+      b1.colliding = false;
+      b2.colliding = false;
+    }, 300);
+  };
+
+  const animate = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!ctx || !canvas) return;
+
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Update and draw bubbles
+    bubbles.forEach(bubble => {
+      bubble.update(canvas);
+      
+      // Frame dragging effect
+      if (bubble.typeName === 'FRAME_DRAG') {
+        bubbles.forEach(other => {
+          if (other === bubble) return;
+          const dx = other.x - bubble.x;
+          const dy = other.y - bubble.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < bubble.frameDragRadius) {
+            const dragStrength = 0.02 * (1 - dist / bubble.frameDragRadius);
+            const angle = Math.atan2(dy, dx);
+            const perpAngle = angle + Math.PI / 2;
+            other.vx += Math.cos(perpAngle) * dragStrength;
+            other.vy += Math.sin(perpAngle) * dragStrength;
+          }
+        });
+      }
+    });
+
+    // Check collisions
+    for (let i = 0; i < bubbles.length; i++) {
+      for (let j = i + 1; j < bubbles.length; j++) {
+        if (checkCollision(bubbles[i], bubbles[j])) {
+          handleCollision(bubbles[i], bubbles[j]);
+        }
+      }
+    }
+
+    bubbles.forEach(bubble => bubble.draw(ctx));
+
+    frameRef.current++;
+    if (running) {
+      animationRef.current = requestAnimationFrame(animate);
+    }
+  };
+
+  useEffect(() => {
+    initBubbles();
+  }, []);
+
+  useEffect(() => {
+    if (running) {
+      animate();
+    }
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [running, bubbles]);
+
+  return (
+    <div className="w-full h-screen bg-gray-900 text-white p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Black Hole Boundary Protocols
+          </h1>
+          <p className="text-gray-400">Mapping cosmic collision physics to BubbleSpace mechanics</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <canvas
+              ref={canvasRef}
+              width={600}
+              height={500}
+              className="bg-black rounded-lg border-2 border-purple-500 w-full"
+            />
+            
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => setRunning(!running)}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition"
+              >
+                {running ? <Pause size={20} /> : <Play size={20} />}
+                {running ? 'Pause' : 'Start'}
+              </button>
+              <button
+                onClick={() => {
+                  setRunning(false);
+                  initBubbles();
+                  setEventLog([]);
+                }}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition"
+              >
+                <RotateCcw size={20} />
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h3 className="font-bold mb-3 flex items-center gap-2">
+                <Shield size={20} className="text-yellow-400" />
+                Bubble Types
+              </h3>
+              <div className="space-y-2 text-sm">
+                {Object.entries(BUBBLE_TYPES).map(([key, type]) => (
+                  <div key={key} className="flex items-start gap-2">
+                    <div 
+                      className="w-4 h-4 rounded-full mt-0.5 flex-shrink-0"
+                      style={{ backgroundColor: type.color, border: `2px solid ${type.border}` }}
+                    />
+                    <div>
+                      <div className="font-semibold">{type.name}</div>
+                      <div className="text-gray-400 text-xs">{type.description}</div>
+                      <div className="text-xs mt-1">
+                        Perm: {(type.permeability * 100).toFixed(0)}% | 
+                        Sov: {(type.sovereignty * 100).toFixed(0)}%
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h3 className="font-bold mb-3 flex items-center gap-2">
+                <Waves size={20} className="text-blue-400" />
+                Collision Log
+              </h3>
+              <div className="space-y-2 text-xs">
+                {eventLog.map((event, i) => (
+                  <div key={i} className="border-l-2 border-purple-500 pl-2 py-1">
+                    <div className="text-gray-400">{event.time}</div>
+                    <div>{event.message}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h3 className="font-bold mb-2 flex items-center gap-2">
+                <Zap size={20} className="text-pink-400" />
+                Physics Applied
+              </h3>
+              <ul className="text-xs space-y-1 text-gray-300">
+                <li>• Event horizons = absolute sovereignty</li>
+                <li>• Frame dragging = geometry warping</li>
+                <li>• Entanglement = persistent connection</li>
+                <li>• Accretion = high-permeability collision</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BlackHoleBubbleSpace;
