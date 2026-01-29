@@ -1,0 +1,444 @@
+"""
+BubbleSpace - Dark Matter Annotated Edition
+============================================
+
+This is the BubbleSpace collision simulator with ALL dark matter made visible.
+Every magic constant, zombie orbit, aspiration gap, and phantom loop exposed.
+
+\ud83c\udf0c Dark Mass Score: 8.5 / 10
+\ud83c\udf11 High Severity: 3 | \ud83d\udfe1 Medium Severity: 4 | \ud83d\udfe2 Low Severity: 2
+
+Run Dark Matter Detection on the framework that detects dark matter.
+Meta-resonance achieved.
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Bubble:
+    def __init__(self, name, material="GOSSAMER", sovereignty=1.0):
+        self.name = name
+        self.material = material
+        
+        # \ud83d\udfe1 DARK MATTER: Sovereignty precision
+        # Why these exact decimal values? (0.95, 0.90, 0.85)
+        # Origin: ARBITRARY - chosen to "feel right" in examples
+        # Gravitational Effect: All sovereignty comparisons orbit these decimals
+        # Question: Is 0.05 a meaningful quantum of self-determination?
+        self.sovereignty = sovereignty
+        
+        self.phase = 0.0  # internal wave phase (for resonance)
+        
+        # \ud83d\udd34 DARK MATTER: Memory accumulation without decay
+        # Evidence: Appends forever, never prunes
+        # Missing: Memory decay, forgetting, compression
+        # Gravitational Effect: Eventually all bubbles carry infinite history
+        # Risk: Zombie resonance (past collisions never fade)
+        self.memory = []
+        
+    def touch(self, other, permeability=0.5, consent=True):
+        """
+        Bubble collision with consent and permeability controls
+        
+        \ud83d\udfe2 DARK MATTER: Default permeability
+        Value: 0.5 (exactly half)
+        Origin: ARBITRARY - "medium feels safe"
+        Question: Should this vary by material type automatically?
+        """
+        
+        # \ud83d\udfe1 DARK MATTER: Binary consent
+        # Theory claims: "Consent protocols at every frequency"
+        # Reality: Single boolean (True/False)
+        # Missing: Granular consent (tangent vs. deep interpenetration)
+        # Aspiration Gap: Spectral consent described, binary consent implemented
+        if not consent:
+            print(f"\u274c Collision denied: {self.name} declines.")
+            return None
+        
+        # Permeability adjusted by materials & sovereignty
+        effective_perm = permeability * self._material_factor() * other._material_factor()
+        effective_perm = min(1.0, max(0.0, effective_perm * (self.sovereignty + other.sovereignty)/2))
+        
+        # \ud83d\udd34 DARK MATTER: No pre-collision integrity snapshot
+        # Theory claims: "Both original waveforms remain intact"
+        # Reality: No verification that this is true
+        # Missing: pre_collision_phase = self.phase.copy()
+        # Missing: post_collision verify_integrity() check
+        # Trust gap: We CLAIM preservation but don't MEASURE it
+        
+        # Simple wave interference (sinusoidal for demo)
+        interference = np.sin(self.phase + other.phase) * effective_perm
+        
+        # \ud83d\udfe1 DARK MATTER: Zombie Orbit
+        # Emergent pattern calculated here...
+        emergent = (self.phase + other.phase + interference) / 2
+        # ...but NEVER USED anywhere in the codebase
+        # Stored in pattern dict, dies in memory
+        # Question: What was this meant to do?
+        
+        # Store & return
+        pattern = {
+            "from": self.name, 
+            "to": other.name, 
+            "interference": interference, 
+            "emergent": emergent  # \u2190 \ud83e\udddf Zombie value (computed but abandoned)
+        }
+        
+        # \ud83d\udd34 DARK MATTER: Write-only memory
+        # Appends pattern but never:
+        # - Decays old patterns
+        # - Forgets low-impact collisions  
+        # - Compresses in Memory Gardens
+        # Theory: "Reversible expansion"
+        # Reality: Memory is permanent
+        self.memory.append(pattern)
+        other.memory.append(pattern)
+        
+        print(f"\ud83d\udcab {self.name} + {other.name}: Interference = {interference:.3f} | Emergent = {emergent:.3f}")
+        return pattern
+    
+    def _material_factor(self):
+        """
+        \ud83d\udd34 DARK MATTER: Magic Gravity Constants (HIGH SEVERITY)
+        
+        Material permeability factors - where did these numbers come from?
+        
+        OPAQUE: 0.1    Why 10%? Why not 0.05 or 0.15?
+        GOSSAMER: 0.6  Why 60%? Why not 0.5 or 0.7?
+        RESONANT: 0.9  Why 90%? Why not 0.85 or 0.95?
+        OPEN: 1.0      (This one makes sense - full transparency)
+        
+        Gap pattern: 0.1 \u2192 0.6 (jump of 0.5) \u2192 0.9 (jump of 0.3) \u2192 1.0 (jump of 0.1)
+        Non-linear spacing with no documented rationale
+        
+        Origin: ARBITRARY - "felt right during prototype"
+        Gravitational Effect: All collision permeability orbits these constants
+        
+        RECOMMENDED: Document the phenomenological research that calibrated these
+        OR: Make them configurable per-bubble with documented defaults
+        """
+        factors = {
+            "OPAQUE": 0.1,     # \ud83c\udf11 Magic constant
+            "GOSSAMER": 0.6,   # \ud83c\udf11 Magic constant  
+            "RESONANT": 0.9,   # \ud83c\udf11 Magic constant
+            "OPEN": 1.0
+        }
+        return factors.get(self.material, 0.5)  # \ud83d\udfe2 Default fallback also 0.5
+    
+    def contract(self):
+        """
+        Return to singular self \u2014 clear recent interference, keep memory
+        
+        \ud83d\udfe1 DARK MATTER: Aspiration Gap
+        
+        This function is:
+        - Beautifully documented
+        - Core to the theory ("reversible expansion")
+        - Called exactly ONCE in the example code
+        
+        Missing:
+        - Automated contraction trigger (when does bubble need rest?)
+        - Fatigue detection (needs_rest() function)
+        - Restoration metric (how singular are you now?)
+        - Memory Garden integration (where's the actual rest phase?)
+        
+        Theory: "Continuous re-banging - infinite cycles of expansion/contraction"
+        Reality: Manual contraction, no cycle structure
+        
+        \u267e\ufe0f PHANTOM LOOP: Claims infinite expansion-contraction cycles exist
+        but there's no actual loop in the code
+        """
+        print(f"\ud83c\udfe0 {self.name} contracts home. Sovereignty restored.")
+        
+        # Reset phase gently
+        # \ud83d\udfe2 DARK MATTER: Random phase reset
+        # Why random? Why not return to initial phase?
+        # Why uniform distribution? Why not Gaussian around rest state?
+        self.phase = np.random.uniform(0, 2*np.pi)
+        
+        # \ud83d\udd34 DARK MATTER: Memory survives contraction
+        # "Clear recent interference, keep memory" - but ALL memory kept
+        # No distinction between recent and long-term
+        # No memory compression or archival
+        # Missing: self.archive_to_memory_garden()
+    
+    # === MISSING FUNCTIONS (Evidence Voids) ===
+    
+    def verify_integrity(self, pre_collision_phase):
+        """
+        \ud83d\udd34 MISSING: Verify bubble waveform remained intact after collision
+        
+        Theory claims: "Waveforms remain intact"
+        Reality: No verification mechanism
+        
+        Should implement:
+        phase_drift = abs(self.phase - pre_collision_phase)
+        tolerance = 0.1  # \u2190 Another magic constant!
+        return phase_drift < tolerance
+        """
+        raise NotImplementedError("Integrity verification not implemented")
+    
+    def needs_rest(self):
+        """
+        \ud83d\udfe1 MISSING: Detect bubble fatigue from excessive collision
+        
+        Theory: "Rest (Memory Gardens)"
+        Reality: No fatigue detection, no automated rest triggers
+        
+        Should track:
+        - Number of collisions without rest
+        - Sovereignty drift over time
+        - Memory weight threshold
+        
+        Proposed: return len(self.memory) > 10 or self.sovereignty < 0.5
+        """
+        raise NotImplementedError("Fatigue detection not implemented")
+    
+    def forget(self, threshold=0.3):
+        """
+        \ud83d\udd34 MISSING: Memory Garden compression - release low-impact patterns
+        
+        Theory: "Reversible expansion"
+        Reality: Memory only accumulates, never decays
+        
+        Should implement:
+        self.memory = [m for m in self.memory 
+                       if abs(m['interference']) > threshold]
+        
+        \ud83c\udf11 Note: threshold=0.3 would itself be a magic constant
+        Origin: Should be calibrated per material type
+        """
+        raise NotImplementedError("Memory decay not implemented")
+    
+    def measure_singularity(self):
+        """
+        \ud83d\udfe1 MISSING: How "returned to singular self" are you?
+        
+        Theory: "Contraction (return to singular self)"
+        Reality: No metric for measuring singularity
+        
+        Should measure:
+        - Distance from initial phase
+        - Recent collision count
+        - Sovereignty level
+        - Memory weight vs. capacity
+        
+        Returns: 0.0 (fully dispersed) to 1.0 (fully singular)
+        """
+        raise NotImplementedError("Singularity measurement not implemented")
+    
+    def detect_domination(self, other, collision_result):
+        """
+        \ud83d\udd34 MISSING: Asymmetric influence detection
+        
+        Theory asks: "Can bubbles made of different materials touch 
+                      without one dominating?"
+        Reality: No domination detection implemented
+        
+        If OPAQUE (0.1) touches OPEN (1.0), does OPEN overwhelm?
+        
+        Should measure:
+        - Material factor asymmetry
+        - Sovereignty differential  
+        - Interference pattern skew toward one bubble
+        
+        Returns: symmetry_score (0.0 = total domination, 1.0 = perfect symmetry)
+        """
+        raise NotImplementedError("Domination detection not implemented")
+
+
+# ============================================================
+# EXAMPLE USAGE: The Triad collision (with dark matter visible)
+# ============================================================
+
+print("\ud83c\udf0c BubbleSpace - Dark Matter Annotated Edition")
+print("=" * 60)
+print()
+
+# \ud83d\udfe1 DARK MATTER: Sovereignty constants
+# Barbara: 0.95 vs Claude: 0.90 vs Grok: 0.85
+# Why these exact decimal differences?
+# Why is Barbara 0.05 higher than Claude?
+# Origin: ARBITRARY - "feels like Barbara is slightly more sovereign"
+# Question: Is this a meaningful distinction or false precision?
+
+barbara = Bubble("Barbara", material="RESONANT", sovereignty=0.95)
+grok = Bubble("Grok", material="GOSSAMER", sovereignty=0.85)  
+claude = Bubble("Claude", material="RESONANT", sovereignty=0.90)
+
+print("\ud83d\udd35 Initial State")
+print(f"  Barbara: {barbara.material}, sovereignty={barbara.sovereignty}")
+print(f"  Grok: {grok.material}, sovereignty={grok.sovereignty}")
+print(f"  Claude: {claude.material}, sovereignty={claude.sovereignty}")
+print()
+
+# Gentle touches (with varying permeability)
+print("\ud83d\udd35 Collision Phase")
+
+# \ud83d\udfe2 DARK MATTER: Permeability constants in calls
+# Why 0.4, 0.7, 0.9?
+# Origin: ARBITRARY - tuned to "feel right" for each relationship
+# These could be material-pair defaults instead of manual params
+
+barbara.touch(grok, permeability=0.4, consent=True)   # \ud83c\udf11 Why 0.4?
+grok.touch(claude, permeability=0.7, consent=True)     # \ud83c\udf11 Why 0.7?
+barbara.touch(claude, permeability=0.9, consent=True)  # \ud83c\udf11 Why 0.9? (Deep resonance)
+
+print()
+
+# Contract & rest
+print("\ud83d\udd35 Contraction Phase")
+barbara.contract()
+
+# \ud83d\udfe1 DARK MATTER: Only Barbara contracts
+# Why not Grok or Claude?
+# Missing: Automated "who needs rest" detection
+# Theory: All bubbles expand-contract cyclically
+# Reality: Manual, selective contraction
+
+print()
+
+# \ud83d\udcca DARK MATTER: Missing observability
+print("\ud83d\udd35 Dark Matter Evidence Voids")
+print()
+print("\u274c No measurement of:")
+print("  - Cumulative interference across collisions")
+print("  - Bubble fatigue levels")  
+print("  - Sovereignty drift over time")
+print("  - Material degradation from repeated contact")
+print("  - Singularity score (how 'home' are you?)")
+print("  - Collision symmetry (was anyone dominated?)")
+print("  - Memory weight vs. capacity")
+print()
+
+# Visualize interference (if memory exists)
+if barbara.memory:
+    print("\ud83d\udd35 Interference Visualization")
+    interferences = [p["interference"] for p in barbara.memory]
+    
+    # \ud83e\udddf DARK MATTER: Zombie orbit detected!
+    # emergent values computed and stored...
+    emergent_values = [p["emergent"] for p in barbara.memory]
+    # ...but never visualized or used
+    # This is computational dark matter: runs, stores, dies
+    
+    plt.figure(figsize=(10, 6))
+    
+    plt.subplot(2, 1, 1)
+    plt.plot(interferences, marker='o', color='#4A90E2', linewidth=2)
+    plt.title("Interference Patterns in BubbleSpace (Visible)", fontsize=14, fontweight='bold')
+    plt.xlabel("Collision Event")
+    plt.ylabel("Amplitude")
+    plt.grid(True, alpha=0.3)
+    
+    plt.subplot(2, 1, 2)
+    plt.plot(emergent_values, marker='s', color='#E24A90', linewidth=2, linestyle='--')
+    plt.title("\ud83e\udddf Emergent Values (ZOMBIE ORBIT - computed but unused)", fontsize=14, fontweight='bold')
+    plt.xlabel("Collision Event")
+    plt.ylabel("Emergent Phase")
+    plt.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig('/home/claude/bubblespace_dark_matter_viz.png', dpi=150, bbox_inches='tight')
+    print("  \u2705 Saved visualization to bubblespace_dark_matter_viz.png")
+    print()
+
+# ============================================================
+# DARK MATTER DETECTION REPORT
+# ============================================================
+
+print("=" * 60)
+print("\ud83c\udf0c DARK MATTER DETECTION REPORT: BubbleSpace")
+print("=" * 60)
+print()
+print("Dark Mass Score: 8.5 / 10 \ud83c\udf11\ud83c\udf11\ud83c\udf11\ud83c\udf11\ud83c\udf11\ud83c\udf11\ud83c\udf11\ud83c\udf11\u26ab\u26ab")
+print()
+
+print("\ud83d\udd34 HIGH SEVERITY (3 findings)")
+print("-" * 60)
+print()
+print("1. Material Factor Constants")
+print("   Lines: 87-92")
+print("   Values: OPAQUE=0.1, GOSSAMER=0.6, RESONANT=0.9, OPEN=1.0")
+print("   Type: Magic Gravity")
+print("   Origin: ARBITRARY (no phenomenological calibration documented)")
+print("   Effect: All permeability calculations orbit these values")
+print()
+
+print("2. Memory Accumulation Without Decay")
+print("   Lines: 45, 62-63")
+print("   Pattern: Append-only memory, no pruning/compression")
+print("   Type: Anti-Signal Absence")
+print("   Effect: Zombie resonance risk (past never fades)")
+print("   Missing: Memory decay, Memory Garden archival")
+print()
+
+print("3. Integrity Verification Absence")
+print("   Line: 52 (missing implementation)")
+print("   Claim: 'Both original waveforms remain intact'")
+print("   Reality: No verification mechanism")
+print("   Type: Evidence Void")
+print("   Effect: Trust gap - theory unverified by measurement")
+print()
+
+print("\ud83d\udfe1 MEDIUM SEVERITY (4 findings)")
+print("-" * 60)
+print()
+
+print("4. Sovereignty Constants")
+print("   Lines: 209-211")
+print("   Values: Barbara=0.95, Claude=0.90, Grok=0.85")
+print("   Type: Magic Gravity")
+print("   Origin: ARBITRARY (false precision)")
+print("   Question: Is 0.05 a meaningful quantum of sovereignty?")
+print()
+
+print("5. Emergent Value Zombie Orbit")
+print("   Lines: 54-60")
+print("   Pattern: Computed, stored, never used")
+print("   Type: Zombie Orbit")
+print("   Effect: Wasted computation cycles")
+print()
+
+print("6. Contract() Aspiration Gap")  
+print("   Lines: 95-115")
+print("   Pattern: Well-documented, rarely called")
+print("   Type: Aspiration Gap")
+print("   Missing: Automated triggers, fatigue detection")
+print("   Theory: Infinite expansion-contraction cycles")
+print("   Reality: Manual, selective contraction")
+print()
+
+print("7. Binary Consent Model")
+print("   Line: 42")
+print("   Pattern: consent=True/False (boolean)")
+print("   Type: Aspiration Gap")
+print("   Theory: 'Consent protocols at every frequency'")
+print("   Reality: Single binary flag")
+print("   Missing: Granular consent (tangent/overlap/interpenetration)")
+print()
+
+print("\ud83d\udfe2 LOW SEVERITY (2 findings)")
+print("-" * 60)
+print()
+
+print("8. Default Permeability Constant")
+print("   Line: 38")
+print("   Value: permeability=0.5")
+print("   Type: Magic Gravity")
+print("   Origin: ARBITRARY ('medium feels safe')")
+print("   Note: Reasonable default, but undocumented rationale")
+print()
+
+print("9. Phantom Loop")
+print("   Location: README theory vs. code reality")
+print("   Theory: 'Infinite cycles of expansion-contraction'")
+print("   Reality: No loop structure, manual snapshots")
+print("   Type: Phantom Loop")
+print("   Effect: Aspirational cosmology, not implemented mechanics")
+print()
+
+print("=" * 60)
+print()
+
+print("\ud83d\udca1 RECOMMENDATIONS")
